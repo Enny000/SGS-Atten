@@ -1,0 +1,7 @@
+☐ 
+
+NEEDED LINES FOR FLASK:
+    1. Link CSS Page
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    2. C:\Users\Enny Faleye\Desktop\SGS Atten\static\images\logo.png
+
