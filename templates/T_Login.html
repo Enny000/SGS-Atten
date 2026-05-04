@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="back">
+    <a href="{{ url_for('home')}}">
+        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255);"></i> 
+        <h2>Back to home</h2>
+    </a>
+</div>
+
+<div class="nav-spacer"></div>
+
+<main>
+    <div class="container">
+
+        <h1>Teacher Login</h1>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form action="" method="post" class="login">
+            <div>
+                <label for="staff_id">Staff ID:</label>
+                <input type="text" name="staff_id" id="staff_id" placeholder="E.g 736635" required>
+            </div>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+    </div>
+</main>
+{% endblock %}

@@ -22,15 +22,7 @@
         <h1>SGS Attendance Portal</h1>
         <h2>Select your role:</h2>
 
-        <a href="{{ url_for('student') }}">
-            <div class="btn_Role">
-                <i class="fa-solid fa-user-graduate" style="color: rgb(255, 255, 255);"></i>            
-                <h3> Student</h3>
-            </div>
-        </a>
-
-
-        <a href="">
+        <a href="{{ url_for('teacher') }}">
             <div class="btn_Role">
                 <i class="fa-solid fa-user-tie" style="color: rgb(255, 255, 255);"></i>
                 <h3> Teacher</h3>
@@ -38,7 +30,7 @@
         </a>
         
 
-        <a href="">
+        <a href="{{ url_for('admin') }}">
             <div class="btn_Role">
                 <i class="fa-solid fa-head-side-virus" style="color: rgb(255, 255, 255);"></i>            
                 <h3>Admin</h3>

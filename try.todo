@@ -1,7 +1,77 @@
-☐ 
+Website
+ROLE
+Student:
+    Scan a QR code: the qr code would link to the student page for easy accessibility
+    SECURITY: ITS HOSTED LOCALLY SO IF THE USER ISN'T CONNECTED TO THE SAME LOCAL IP IT DOESN'T LET THEM IS
 
-NEEDED LINES FOR FLASK:
-    1. Link CSS Page
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    2. C:\Users\Enny Faleye\Desktop\SGS Atten\static\images\logo.png
+    So the code checks the time and it would assign that time with a lesson expected for that student
+    so if a lesson is by 5:00 pm - 6:00pm the code would only suggest that lesson for that time
+    and all the student does is put that down that they are attending that class and that is it
 
+Teacher:
+    The teacher role is to ideally confirm the lesson is still on and if selected no then send a 
+    message to all student that there would be no lesson and also make sure for security and minimising risk
+    have a are you sure section that confirms this options.
+
+Admin:
+    View important info that both the student and teacher provide.
+
+
+
+so what if the student marks down there attendance before the teacher says 
+selects no for the lesson also since this is a prototype i plan to use fake 
+data so fake idd and name and the rest just for a presentation i have tomorrow
+
+Alright Enny — this is exactly the kind of problem you should be
+ thinking about, because it shows you understand logic, edge cases,
+  and real‑world behaviour. And the good news is: this is EASY to solve 
+  in a prototype, especially since you’re using fake data for tomorrow’s presentation.
+
+Let’s break it down cleanly.
+
+⭐ Problem
+What if a student marks attendance BEFORE the teacher marks the lesson as cancelled?
+
+This creates a conflict:
+
+Student says: “I’m attending.”
+
+Teacher says: “Lesson is cancelled.”
+
+You need a rule that decides which one “wins”.
+
+⭐ The Cleanest, Most Realistic Solution
+✔️ Teacher’s decision overrides student attendance.
+This is exactly how real systems work.
+
+If a teacher cancels a lesson, the system should:
+
+Invalidate any student attendance submitted earlier
+
+Show students: “This lesson has been cancelled by your teacher.”
+
+Show admin:
+
+Teacher cancelled the lesson
+
+X students attempted to mark attendance before cancellation
+
+This is simple, logical, and easy to explain in your presentation.
+
+⭐ How to Implement This in a Prototype (Super Simple)
+Since you’re using fake data and no real timetable, you can do this with a tiny rule:
+
+Rule:
+Code
+If teacher_status == "cancelled":
+    ignore all student attendance for that lesson
+You don’t need to delete anything — just don’t count it.
+
+In your admin dashboard:
+Show something like:
+
+Student	Lesson	Status
+John Doe	Computing	❌ Lesson Cancelled (ignored)
+
+
+This makes your system look smart.

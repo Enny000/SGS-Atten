@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="nav-spacer"></div>
+
+<main>
+    <div class="container atten_form">
+
+        <h2> Fill in form:</h2>
+
+        <form class="form_info">
+
+            <div>
+                <label for="">Class Name:</label>
+                <select name="" id="">
+                    <option value="">2003</option>
+                    <option value="">2074</option>
+                    <option value="">2752</option>
+                    <option value="">2932</option>
+                </select>
+            </div>
+
+            <div>
+                <h3>Is the class running?</h3>
+                
+                <div>
+                    <label for="yes">Yes</label>
+                    <input type="radio" name="class_running" value="yes" id="yes">
+                </div>
+
+                <div>
+                    <label for="no">No</label>
+                    <input type="radio" name="class_running" value="no" id="no">
+                </div>
+            </div>
+
+            <div>
+                <label for="num"> Number of students</label>
+                <button>-</button>
+
+                <div>
+                    <input type="text" id="num">
+                </div>
+
+                <button>+</button>
+            </div>
+
+            <div>
+                <label for="notes">Optional Notes</label>
+                <textarea name="notes" id="notes"></textarea>
+            </div>
+
+            <div>
+                <button type="submit">Submit</button>
+
+                <a href="">
+                    <h3>Report any issues?</h3>
+                </a>
+            </div>
+        </form>
+
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="back">
+    <a href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255);"></i>
+        <h2>Logout</h2>
+    </a>
+</div>
+
+<div class="nav-spacer"></div>
+
+<main>
+    <div class="container atten_form">
+
+        <h2>Welcome, {{ name }}!</h2>
+        <p>Submit attendance for your class below.</p>
+
+        {% if success %}
+            <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        <form method="post" class="form_info">
+            <div>
+                <label for="class_name">Class Name:</label>
+                <select name="class_name" id="class_name" required>
+                    <option value="">Select class</option>
+                    <option value="2003">2003</option>
+                    <option value="2074">2074</option>
+                    <option value="2752">2752</option>
+                    <option value="2932">2932</option>
+                </select>
+            </div>
+
+            <div>
+                <h3>Is the class running?</h3>
+                <div>
+                    <label for="yes">Yes</label>
+                    <input type="radio" name="class_running" value="yes" id="yes" required>
+                </div>
+                <div>
+                    <label for="no">No</label>
+                    <input type="radio" name="class_running" value="no" id="no" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="student_count">Number of students present:</label>
+                <input type="number" name="student_count" id="student_count" min="0" value="0" required>
+            </div>
+
+            <div>
+                <label for="notes">Optional Notes</label>
+                <textarea name="notes" id="notes" rows="4"></textarea>
+            </div>
+
+            <div>
+                <button type="submit">Submit Attendance</button>
+            </div>
+        </form>
+
+    </div>
+</main>
+{% endblock %}
