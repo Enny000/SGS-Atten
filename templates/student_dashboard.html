@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="back">
+    <a href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255); overflow: hidden;"></i>
+        <h2>Logout</h2>
+    </a>
+</div>
+
+<main>
+    <div class="container atten_form">
+
+        <h2>Welcome, {{ name }}!</h2>
+
+        {% if not active_classes %}
+            <p style="color: #ff6b6b; font-size: 1.1em;">You are not enrolled in any classes.</p>
+        {% elif no_active_classes %}
+            <p style="color: #ffa500; font-size: 1.1em;">No active classes at this time. Current time: {{ current_time }}</p>
+            <p>Your scheduled classes:</p>
+            <div style="margin-top: 1em;">
+                {% for class in active_classes %}
+                    <div style="padding: 1em; margin: 0.5em 0; border-radius: 5px;">
+                        <strong>Class:</strong> {{ class.class_id }}<br>
+                        <strong>Teacher:</strong> {{ class.teacher_id }}<br>
+                        <strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Confirm your attendance for active classes below:</p>
+            {% for class in active_classes %}
+                {% if class.is_active %}
+                    <div style="padding: 1em; margin: 1em 0; border-radius: 5px;">
+                        <div class="info_border">
+                            <h3 style="margin-top: 0;">Class: {{ class.class_id }}</h3>
+                            <p><strong>Teacher:</strong> {{ class.teacher_id }}</p>
+                            <p><strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}</p>
+                            <p style="color: #4caf50; font-weight: bold;">✓ CLASS IS ACTIVE - Mark your attendance now!</p>
+                        </div>
+
+                        <form method="post" class="form_info" style="margin-top: 1em;">
+                            <input type="hidden" name="timetable_id" value="{{ class.timetable_id }}">
+
+                            <div>
+                                <h4>Are you attending this class?</h4>
+                                <div class="btn">
+                                    <div>
+                                        <input type="radio" name="attendance" value="present" id="present_{{ class.timetable_id }}" required>
+                                        <label for="present_{{ class.timetable_id }}">Yes, I'm present</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="attendance" value="absent" id="absent_{{ class.timetable_id }}" required>
+                                        <label for="absent_{{ class.timetable_id }}">No, I'm absent</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="notes_{{ class.timetable_id }}">Optional Notes:</label>
+                                <textarea name="notes" id="notes_{{ class.timetable_id }}" placeholder="Add any notes..." rows="3"></textarea>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="button_design">Submit Attendance</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

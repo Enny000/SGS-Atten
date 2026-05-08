@@ -1,5 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 import sqlite3
+import json
+from datetime import datetime, timedelta
 
 # Create the Flask app and set a secret key for session handling.
 app = Flask(__name__)
@@ -33,6 +35,31 @@ def init_db():
         """
     )
 
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS students(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            name TEXT
+        )
+        """
+    )
+
+        # Table for attendance submissions.
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS student_records (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            timetable_id INTEGER NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            status TEXT NOT NULL,
+            notes TEXT
+        )
+        """
+    )
+
     # Table for attendance submissions.
     cursor.execute(
         """
@@ -60,6 +87,30 @@ def init_db():
         """
     )
 
+        # Table for classes.
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS classes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            class_id TEXT NOT NULL UNIQUE,
+            class_name TEXT NOT NULL
+        )
+        """
+    )
+
+    cursor.execute(
+        """
+    CREATE TABLE IF NOT EXISTS timetable(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        class_id TEXT NOT NULL UNIQUE,  
+        students TEXT[] NOT NULL,
+        teacher_id TEXT NOT NULL,
+        start_time TIMESTAMP NOT NULL,
+        end_time TIMESTAMP NOT NULL
+    )
+        """
+    )
+
     # Add example hard-coded teacher accounts.
     cursor.execute(
         "INSERT OR IGNORE INTO tutors (staff_id, password, name) VALUES (?, ?, ?)",
@@ -75,6 +126,28 @@ def init_db():
         "INSERT OR IGNORE INTO admin (admin_id, password) VALUES (?, ?)",
         ("admin1", "adminpass"),
     )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
+        ("student1", "studentpass", "Timothy"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO classes (class_id, class_name) VALUES (?, ?)",
+        ("B101", "Maths"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO timetable (class_id, students, teacher_id, start_time, end_time) VALUES (?, ?, ?, ?, ?)",
+        ("B101", "[student1]", "teacher1", datetime.now(), datetime.now() + timedelta(minutes=30)),
+    )
+
+
+    # # Add one example student account.
+    # cursor.execute(
+    #     "INSERT OR IGNORE INTO admin (admin_id, password) VALUES (?, ?)",
+    #     ("admin1", "adminpass"),
+    # )
 
     conn.commit()
     conn.close()
@@ -104,6 +177,18 @@ def find_admin(admin_id, password):
     return admin
 
 
+def find_student(student_id, password):
+    """Return the student row if credentials match."""
+    conn = get_db()
+    cursor = conn.execute(
+        "SELECT * FROM students WHERE student_id = ? AND password = ?",
+        (student_id, password),
+    )
+    student = cursor.fetchone()
+    conn.close()
+    return student
+
+
 @app.route('/')
 def home():
     """Show the home page with role selection."""
@@ -128,6 +213,99 @@ def teacher():
 
     return render_template('T_Login.html', error=error)
 
+@app.route('/student', methods=['GET', 'POST'])
+def student():
+    """Student login page and login handling."""
+    error = None
+    if request.method == 'POST':
+        student_id = request.form.get('student_id', '').strip()
+        password = request.form.get('password', '').strip()
+        student_record = find_student(student_id, password)
+
+        if student_record:
+            session['student_id'] = student_record['id']
+            session['student_text_id'] = student_record['student_id']
+            session['student_name'] = student_record['name']
+            return redirect(url_for('student_dashboard'))
+
+        error = 'Invalid student ID or password.'
+
+    return render_template('S_Login.html', error=error)
+
+
+@app.route('/student/dashboard', methods=['GET', 'POST'])
+def student_dashboard():
+    """Student dashboard page with active classes."""
+    if 'student_id' not in session:
+        return redirect(url_for('student'))
+
+    if request.method == 'POST':
+        timetable_id = request.form.get('timetable_id', '').strip()
+        attendance = request.form.get('attendance', 'absent').strip()
+        notes = request.form.get('notes', '').strip()
+
+        conn = get_db()
+        cursor = conn.execute(
+            "INSERT INTO student_records (student_id, timetable_id, status, notes) VALUES (?, ?, ?, ?)",
+            (session['student_id'], timetable_id, attendance, notes),
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('student_dashboard'))
+
+    # Fetch all classes where this student is enrolled
+    conn = get_db()
+    cursor = conn.execute(
+        "SELECT id, class_id, students, teacher_id, start_time, end_time FROM timetable"
+    )
+    all_timetables = cursor.fetchall()
+    conn.close()
+
+    # Filter classes where student is enrolled
+    current_time = datetime.now()
+    active_classes = []
+    no_active_classes = True
+
+    for timetable in all_timetables:
+        # Check if student is in the students list
+        student_text_id = session.get('student_text_id', '')
+        try:
+            students_list = json.loads(timetable['students'])
+        except (json.JSONDecodeError, TypeError):
+            # If JSON parsing fails, try simple string matching
+            students_list = [s.strip("'\"[]") for s in timetable['students'].replace('[', '').replace(']', '').split(',')]
+        
+        if student_text_id in students_list:
+            try:
+                start_time = datetime.fromisoformat(timetable['start_time'])
+                end_time = datetime.fromisoformat(timetable['end_time'])
+            except (ValueError, TypeError):
+                # If datetime parsing fails, treat as string comparison
+                start_time = timetable['start_time']
+                end_time = timetable['end_time']
+                is_active = False
+            else:
+                is_active = start_time <= current_time <= end_time
+
+            active_classes.append({
+                'timetable_id': timetable['id'],
+                'class_id': timetable['class_id'],
+                'teacher_id': timetable['teacher_id'],
+                'start_time': timetable['start_time'],
+                'end_time': timetable['end_time'],
+                'is_active': is_active
+            })
+            if is_active:
+                no_active_classes = False
+
+    return render_template(
+        'student_dashboard.html',
+        name=session.get('student_name', 'Student'),
+        active_classes=active_classes,
+        no_active_classes=no_active_classes,
+        current_time=current_time.strftime('%Y-%m-%d %H:%M:%S')
+    )
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -140,11 +318,30 @@ def admin():
 
         if admin_record:
             session['admin_id'] = admin_record['id']
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('admin_menu'))
 
         error = 'Invalid admin ID or password.'
 
     return render_template('A_Login.html', error=error)
+
+
+@app.route('/admin/menu')
+def admin_menu():
+    """Admin menu page with options."""
+    if 'admin_id' not in session:
+        return redirect(url_for('admin'))
+
+    return render_template('admin_menu.html')
+
+
+@app.route('/admin/student-overview')
+def student_overview():
+    """Student overview page (placeholder)."""
+    if 'admin_id' not in session:
+        return redirect(url_for('admin'))
+
+    # Placeholder: for now, just show a message
+    return render_template('student_overview.html')
 
 
 @app.route('/teacher/dashboard', methods=['GET', 'POST'])
@@ -166,19 +363,44 @@ def teacher_dashboard():
             student_count = 0
 
         conn = get_db()
-        conn.execute(
+        cursor = conn.execute(
             "INSERT INTO attendance_records (tutor_id, class_name, class_running, student_count, notes) VALUES (?, ?, ?, ?, ?)",
             (session['teacher_id'], class_name, class_running, student_count, notes),
         )
+        record_id = cursor.lastrowid
         conn.commit()
         conn.close()
 
-        success = 'Attendance record submitted successfully.'
+        return redirect(url_for('teacher_summary', record_id=record_id))
 
     return render_template(
         'teacher_dashboard.html',
         name=session.get('teacher_name', 'Teacher'),
         success=success,
+    )
+
+
+@app.route('/teacher/summary/<int:record_id>')
+def teacher_summary(record_id):
+    """Summary page after a teacher submits attendance."""
+    if 'teacher_id' not in session:
+        return redirect(url_for('teacher'))
+
+    conn = get_db()
+    cursor = conn.execute(
+        "SELECT * FROM attendance_records WHERE id = ? AND tutor_id = ?",
+        (record_id, session['teacher_id']),
+    )
+    record = cursor.fetchone()
+    conn.close()
+
+    if record is None:
+        return redirect(url_for('teacher_dashboard'))
+
+    return render_template(
+        'teacher_summary.html',
+        name=session.get('teacher_name', 'Teacher'),
+        record=record,
     )
 
 

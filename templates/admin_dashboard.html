@@ -1,52 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="back">
-    <a href="{{ url_for('logout') }}">
-        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255);"></i>
-        <h2>Logout</h2>
-    </a>
-</div>
-
-<div class="nav-spacer"></div>
-
 <main>
     <div class="container">
+        <div class="summary-card">
+            <h2>Admin Dashboard</h2>
+            <p>All attendance submissions are listed below.</p>
 
-        <h2>Admin Dashboard</h2>
-        <p>All attendance submissions are listed below.</p>
+            {% if records %}
+                <div class="table-wrap">
+                    <table class="records-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tutor</th>
+                                <th>Class</th>
+                                <th>Running</th>
+                                <th>Students</th>
+                                <th>Notes</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                            <tr>
+                                <td>{{ record.id }}</td>
+                                <td>{{ record.tutor_name }}</td>
+                                <td>{{ record.class_name }}</td>
+                                <td>{{ 'Yes' if record.class_running == 1 else 'No' }}</td>
+                                <td>{{ record.student_count }}</td>
+                                <td>{{ record.notes }}</td>
+                                <td>{{ record.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No attendance records found yet.</p>
+            {% endif %}
 
-        {% if records %}
-            <table class="records-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tutor</th>
-                        <th>Class</th>
-                        <th>Running</th>
-                        <th>Students</th>
-                        <th>Notes</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for record in records %}
-                    <tr>
-                        <td>{{ record.id }}</td>
-                        <td>{{ record.tutor_name }}</td>
-                        <td>{{ record.class_name }}</td>
-                        <td>{{ 'Yes' if record.class_running == 1 else 'No' }}</td>
-                        <td>{{ record.student_count }}</td>
-                        <td>{{ record.notes }}</td>
-                        <td>{{ record.timestamp }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No attendance records found yet.</p>
-        {% endif %}
-
+            <div class="summary-actions">
+                <a href="{{ url_for('admin_menu') }}" class="secondary-btn button_design">Back to Admin Menu</a>
+                <a href="{{ url_for('logout') }}" class="secondary-btn button_design">Logout</a>
+            </div>
+        </div>
     </div>
 </main>
+
 {% endblock %}

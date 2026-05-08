@@ -204,11 +204,6 @@ header input{
 }
 
 
-.btn_role:hover{
-    background-color: white;
-    color: black;
-}
-
 .role > a div h3{
     font-size:  40px;
     
@@ -413,12 +408,190 @@ header input{
     margin-top: 20px;
 }
 
+.btn{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    
+}
+.btn > div label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+    border: 2px solid white;
+    border-radius: 10px;
+    background-color: transparent;
+    padding: 10px;
 
+    width: 100%;
+    margin-bottom: 0px;
+}
+.btn input:checked + label {
+    background-color: white;
+    color: black;
+    border: 3px solid rgb(0, 68, 255);
+}
 
+.btn > div input{
+    display: none;
+}
 
+.summary-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 26px;
+    padding: 28px;
+    max-width: 640px;
+    width: 100%;
+    margin: 40px auto;
+    color: #ffffff;
+}
+
+.admin-card {
+    max-width: 100%;
+    padding: 24px;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.summary-card h2 {
+    margin-bottom: 12px;
+    font-size: 1.9rem;
+}
+
+.summary-card p {
+    margin-bottom: 24px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.summary-card a{
+    align-items: center;
+
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    margin-bottom: 14px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.summary-row span {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.summary-row strong {
+    color: #ffffff;
+}
+
+.summary-notes p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.summary-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.summary-actions a {
+    text-decoration: none;
+}
+
+.flex{
+    display: flex;
+}
+
+.j-center{
+    justify-content: center;
+}
+.col{
+    flex-direction: column;
+
+}
+
+.a-center{
+    align-items: center;
+}
+
+.summary-actions .submit-btn,
+.summary-actions .secondary-btn {
+    width: 100%;
+}
+
+.records-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.records-table th,
+.records-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.records-table th {
+    background: rgba(255, 255, 255, 0.08);
+    font-weight: 600;
+}
+
+.records-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.button_design{  
+    border: 2px solid white;
+    border-radius: 12px;
+    background-color: transparent;
+    padding: 12px;
+
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    max-width: fit-content;
+    color: white;
+    font-weight: 500;
+}
+
+.success-message{
+    margin: 12px;
+    border: 2px solid green;
+    border-radius: 12px;
+    padding: 12px;
+
+    background-color: rgba(48, 164, 48, 0.461);
+    color: white;
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
 
 /* ----------------------------------- */
+
+.info_border{
+    border: 3px solid white;
+}
 
 
 footer{

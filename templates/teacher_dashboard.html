@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 <div class="back">
     <a href="{{ url_for('logout') }}">
-        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255);"></i>
+        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255); overflow: hidden;"></i>
         <h2>Logout</h2>
     </a>
 </div>
-
-<div class="nav-spacer"></div>
 
 <main>
     <div class="container atten_form">
@@ -34,14 +33,18 @@
 
             <div>
                 <h3>Is the class running?</h3>
-                <div>
-                    <label for="yes">Yes</label>
-                    <input type="radio" name="class_running" value="yes" id="yes" required>
+                <br>
+                <div class="btn">                    
+                    <div>
+                        <input type="radio" name="class_running" value="yes" id="yes" required>
+                        <label for="yes">Yes</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="class_running" value="no" id="no" required>
+                        <label for="no">No</label>
+                    </div>
                 </div>
-                <div>
-                    <label for="no">No</label>
-                    <input type="radio" name="class_running" value="no" id="no" required>
-                </div>
+
             </div>
 
             <div>
@@ -51,14 +54,24 @@
 
             <div>
                 <label for="notes">Optional Notes</label>
-                <textarea name="notes" id="notes" rows="4"></textarea>
+                <textarea name="notes" id="notes" placeholder="Type here ..." rows="4"></textarea>
             </div>
 
-            <div>
-                <button type="submit">Submit Attendance</button>
+            <div >
+                <button type="submit" class="button_design">Submit Attendance</button>
             </div>
         </form>
 
     </div>
 </main>
-{% endblock %}
+<script>
+    const noRadio = document.getElementById('no');
+    if (noRadio) {
+        noRadio.addEventListener('click', (event) => {
+            const confirmed = confirm('Are you sure the lesson is not running?');
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    }
+</script>{% endblock %}

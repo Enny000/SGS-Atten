@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main>
+    <div class="container">
+        <div class="summary-card">
+            <h2>Attendance submitted</h2>
+            <p>Review your submission below before continuing.</p>
+
+            <div class="summary-row">
+                <span>Teacher</span>
+                <strong>{{ name }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Class name</span>
+                <strong>{{ record['class_name'] }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Class running</span>
+                <strong>{{ 'Yes' if record['class_running'] == 1 else 'No' }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Students present</span>
+                <strong>{{ record['student_count'] }}</strong>
+            </div>
+            <div class="summary-row summary-notes">
+                <span>Notes</span>
+                <p>{{ record['notes'] or 'None' }}</p>
+            </div>
+
+            <div class="summary-actions a-center flex">
+                <a href="{{ url_for('teacher_dashboard') }}" class="secondary-btn button_design">Submit another attendance</a>
+                <a href="{{ url_for('logout') }}" class="submit-btn button_design j-center">Logout</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

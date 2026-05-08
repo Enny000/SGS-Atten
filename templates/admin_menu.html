@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main>
+    <div class="container">
+        <div class="summary-card">
+            <h2>Admin Panel</h2>
+            <p>Select an option below.</p>
+
+            <div class="flex j-center col a-center">
+
+                <div class="summary-actions j-center">
+                    <a href="{{ url_for('student_overview') }}" class="submit-btn button_design">Student Overview</a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="secondary-btn button_design">Admin Dashboard</a>
+                </div>
+                <br>
+                <a href="{{ url_for('logout') }}" class="secondary-btn button_design ">Logout</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
