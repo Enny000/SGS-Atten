@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "class_id": "B101",
+    "class_name": "Mathematics",
+    "students": ["student1", "student2", "student3"],
+    "teacher_id": "teacher1",
+    "teacher_name": "Alice Teacher",
+    "start_time": "2026-05-12 09:00:00",
+    "end_time": "2026-05-12 10:00:00"
+  },
+  {
+    "id": 2,
+    "class_id": "B102",
+    "class_name": "English",
+    "students": ["student1", "student4"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-12 10:15:00",
+    "end_time": "2026-05-12 11:15:00"
+  },
+  {
+    "id": 3,
+    "class_id": "B103",
+    "class_name": "Physics",
+    "students": ["student2", "student3", "student5"],
+    "teacher_id": "teacher1",
+    "teacher_name": "Alice Teacher",
+    "start_time": "2026-05-12 11:30:00",
+    "end_time": "2026-05-12 12:30:00"
+  },
+  {
+    "id": 4,
+    "class_id": "B104",
+    "class_name": "Chemistry",
+    "students": ["student1", "student2"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-12 13:00:00",
+    "end_time": "2026-05-12 14:00:00"
+  },
+  {
+    "id": 5,
+    "class_id": "B105",
+    "class_name": "Biology",
+    "students": ["student3", "student4", "student5"],
+    "teacher_id": "teacher1",
+    "teacher_name": "Alice Teacher",
+    "start_time": "2026-05-12 14:15:00",
+    "end_time": "2026-05-12 15:15:00"
+  },
+  {
+    "id": 6,
+    "class_id": "B106",
+    "class_name": "History",
+    "students": ["student1", "student5"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-12 15:30:00",
+    "end_time": "2026-05-12 16:30:00"
+  },
+  {
+    "id": 7,
+    "class_id": "B107",
+    "class_name": "Geography",
+    "students": ["student2", "student4"],
+    "teacher_id": "teacher1",
+    "teacher_name": "Alice Teacher",
+    "start_time": "2026-05-12 16:45:00",
+    "end_time": "2026-05-12 17:45:00"
+  },
+  {
+    "id": 8,
+    "class_id": "B108",
+    "class_name": "Computer Science",
+    "students": ["student1", "student2", "student3", "student4", "student5"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-13 09:00:00",
+    "end_time": "2026-05-13 10:00:00"
+  },
+
+{
+    "id": 9,
+    "class_id": "B789",
+    "class_name": "Computer Science",
+    "students": ["student1"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-12 19:30:00",
+    "end_time": "2026-05-12 20:00:00"
+}
+]

@@ -21,9 +21,9 @@
             <p>Your scheduled classes:</p>
             <div style="margin-top: 1em;">
                 {% for class in active_classes %}
-                    <div style="padding: 1em; margin: 0.5em 0; border-radius: 5px;">
+                    <div style="padding: 1em; margin: 0.5em 0; border-radius: 5px; background-color: #1b1f3a;">
                         <strong>Class:</strong> {{ class.class_id }}<br>
-                        <strong>Teacher:</strong> {{ class.teacher_id }}<br>
+                        <strong>Teacher:</strong> {{ class.teacher_name }}<br>
                         <strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}
                     </div>
                 {% endfor %}
@@ -32,12 +32,12 @@
             <p>Confirm your attendance for active classes below:</p>
             {% for class in active_classes %}
                 {% if class.is_active %}
-                    <div style="padding: 1em; margin: 1em 0; border-radius: 5px;">
+                    <div style="padding: 1em; margin: 1em 0; border-radius: 5px; background: linear-gradient(135deg, #1f7a1f, #3cc15c); color: white;">
                         <div class="info_border">
                             <h3 style="margin-top: 0;">Class: {{ class.class_id }}</h3>
-                            <p><strong>Teacher:</strong> {{ class.teacher_id }}</p>
+                            <p><strong>Teacher:</strong> {{ class.teacher_name }}</p>
                             <p><strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}</p>
-                            <p style="color: #4caf50; font-weight: bold;">✓ CLASS IS ACTIVE - Mark your attendance now!</p>
+                            <p style="font-weight: bold;">✓ CLASS IS ACTIVE - Mark your attendance now!</p>
                         </div>
 
                         <form method="post" class="form_info" style="margin-top: 1em;">

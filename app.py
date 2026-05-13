@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, request, f
 import sqlite3
 import json
 from datetime import datetime, timedelta
+import os
 
 # Create the Flask app and set a secret key for session handling.
 app = Flask(__name__)
@@ -9,6 +10,7 @@ app.secret_key = "dev-secret-key-change-me"
 
 # Database filename used by sqlite3.
 DATABASE = "database.db"
+TIMETABLE_JSON = "static/timetable.json"
 
 
 def get_db():
@@ -16,6 +18,32 @@ def get_db():
     conn = sqlite3.connect(DATABASE, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def load_timetable():
+    """Load timetable data from JSON file."""
+    try:
+        if os.path.exists(TIMETABLE_JSON):
+            with open(TIMETABLE_JSON, 'r') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"Error loading timetable from JSON: {e}")
+    return []
+
+
+def parse_timetable_datetime(value):
+    """Parse timetable datetime string with or without fractional seconds."""
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        for fmt in ('%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S'):
+            try:
+                return datetime.strptime(value, fmt)
+            except ValueError:
+                continue
+    return None
 
 
 def init_db():
@@ -130,6 +158,26 @@ def init_db():
     cursor.execute(
         "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
         ("student1", "studentpass", "Timothy"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
+        ("student2", "pass456", "Sarah"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
+        ("student3", "pass789", "Michael"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
+        ("student4", "passabc", "Jessica"),
+    )
+
+    cursor.execute(
+        "INSERT OR IGNORE INTO students (student_id, password, name) VALUES (?, ?, ?)",
+        ("student5", "passdef", "David"),
     )
 
     cursor.execute(
@@ -254,44 +302,38 @@ def student_dashboard():
 
         return redirect(url_for('student_dashboard'))
 
-    # Fetch all classes where this student is enrolled
-    conn = get_db()
-    cursor = conn.execute(
-        "SELECT id, class_id, students, teacher_id, start_time, end_time FROM timetable"
-    )
-    all_timetables = cursor.fetchall()
-    conn.close()
+    # Load timetable from JSON file
+    all_timetables = load_timetable()
 
     # Filter classes where student is enrolled
     current_time = datetime.now()
     active_classes = []
     no_active_classes = True
 
+    student_text_id = session.get('student_text_id', '')
+    
     for timetable in all_timetables:
         # Check if student is in the students list
-        student_text_id = session.get('student_text_id', '')
-        try:
-            students_list = json.loads(timetable['students'])
-        except (json.JSONDecodeError, TypeError):
-            # If JSON parsing fails, try simple string matching
-            students_list = [s.strip("'\"[]") for s in timetable['students'].replace('[', '').replace(']', '').split(',')]
+        students_list = timetable.get('students', [])
+        if isinstance(students_list, str):
+            try:
+                students_list = json.loads(students_list)
+            except json.JSONDecodeError:
+                students_list = [s.strip("'\"[]") for s in students_list.replace('[', '').replace(']', '').split(',')]
         
         if student_text_id in students_list:
-            try:
-                start_time = datetime.fromisoformat(timetable['start_time'])
-                end_time = datetime.fromisoformat(timetable['end_time'])
-            except (ValueError, TypeError):
-                # If datetime parsing fails, treat as string comparison
-                start_time = timetable['start_time']
-                end_time = timetable['end_time']
-                is_active = False
-            else:
+            start_time = parse_timetable_datetime(timetable.get('start_time'))
+            end_time = parse_timetable_datetime(timetable.get('end_time'))
+            is_active = False
+            if start_time and end_time:
                 is_active = start_time <= current_time <= end_time
 
             active_classes.append({
                 'timetable_id': timetable['id'],
                 'class_id': timetable['class_id'],
+                'class_name': timetable.get('class_name', ''),
                 'teacher_id': timetable['teacher_id'],
+                'teacher_name': timetable.get('teacher_name', ''),
                 'start_time': timetable['start_time'],
                 'end_time': timetable['end_time'],
                 'is_active': is_active
@@ -336,12 +378,43 @@ def admin_menu():
 
 @app.route('/admin/student-overview')
 def student_overview():
-    """Student overview page (placeholder)."""
+    """Student overview page displaying all student attendance records."""
     if 'admin_id' not in session:
         return redirect(url_for('admin'))
 
-    # Placeholder: for now, just show a message
-    return render_template('student_overview.html')
+    conn = get_db()
+    cursor = conn.execute(
+        """
+        SELECT sr.id, s.student_id, s.name as student_name, sr.timetable_id, sr.status, sr.notes, sr.timestamp
+        FROM student_records sr
+        JOIN students s ON sr.student_id = s.id
+        ORDER BY sr.timestamp DESC
+        """
+    )
+    records = cursor.fetchall()
+    conn.close()
+
+    # Load timetable data to enrich records with class information
+    all_timetables = load_timetable()
+    timetable_map = {t['id']: t for t in all_timetables}
+
+    # Enhance records with class information from timetable
+    enriched_records = []
+    for record in records:
+        class_info = timetable_map.get(record['timetable_id'], {})
+        enriched_records.append({
+            'id': record['id'],
+            'student_id': record['student_id'],
+            'student_name': record['student_name'],
+            'class_id': class_info.get('class_id', 'N/A'),
+            'class_name': class_info.get('class_name', 'N/A'),
+            'teacher_name': class_info.get('teacher_name', 'N/A'),
+            'status': record['status'],
+            'notes': record['notes'],
+            'timestamp': record['timestamp']
+        })
+
+    return render_template('student_overview.html', records=enriched_records)
 
 
 @app.route('/teacher/dashboard', methods=['GET', 'POST'])
@@ -428,6 +501,41 @@ def logout():
     """Log out the current user and clear the session."""
     session.clear()
     return redirect(url_for('home'))
+
+
+@app.route('/api/timetable')
+def api_get_timetable():
+    """API endpoint to get timetable data for the logged-in student."""
+    if 'student_id' not in session:
+        return {'error': 'Not authenticated'}, 401
+    
+    all_timetables = load_timetable()
+    student_text_id = session.get('student_text_id', '')
+    
+    # Filter classes for the current student
+    student_classes = []
+    for timetable in all_timetables:
+        students_list = timetable.get('students', [])
+        if isinstance(students_list, str):
+            try:
+                students_list = json.loads(students_list)
+            except json.JSONDecodeError:
+                pass
+        
+        if student_text_id in students_list:
+            student_classes.append(timetable)
+    
+    return json.dumps(student_classes), 200, {'Content-Type': 'application/json'}
+
+
+@app.route('/api/timetable/all')
+def api_get_all_timetable():
+    """API endpoint to get all timetable data (admin/teacher access)."""
+    if 'teacher_id' not in session and 'admin_id' not in session:
+        return {'error': 'Not authorized'}, 403
+    
+    all_timetables = load_timetable()
+    return json.dumps(all_timetables), 200, {'Content-Type': 'application/json'}
 
 
 if __name__ == '__main__':
