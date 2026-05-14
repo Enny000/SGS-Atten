@@ -32,8 +32,8 @@
             <p>Confirm your attendance for active classes below:</p>
             {% for class in active_classes %}
                 {% if class.is_active %}
-                    <div style="padding: 1em; margin: 1em 0; border-radius: 5px; background: linear-gradient(135deg, #1f7a1f, #3cc15c); color: white;">
-                        <div class="info_border">
+                    <div style="padding: 1em; margin: 1em 0; border-radius: 10px; background:rgba(0, 0, 0, 0.253); color: white; padding: 20px;">
+                        <div class="info_border" style="padding: 12px; border-radius: 10px;">
                             <h3 style="margin-top: 0;">Class: {{ class.class_id }}</h3>
                             <p><strong>Teacher:</strong> {{ class.teacher_name }}</p>
                             <p><strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}</p>
@@ -44,7 +44,7 @@
                             <input type="hidden" name="timetable_id" value="{{ class.timetable_id }}">
 
                             <div>
-                                <h4>Are you attending this class?</h4>
+                                <h4 style="margin-bottom: 10px;">Are you attending this class?</h4>
                                 <div class="btn">
                                     <div>
                                         <input type="radio" name="attendance" value="present" id="present_{{ class.timetable_id }}" required>

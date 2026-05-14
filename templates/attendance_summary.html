@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="back">
+    <a href="{{ url_for('student_dashboard') }}">
+        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255); overflow: hidden;"></i>
+        <h2>Back to Dashboard</h2>
+    </a>
+</div>
+
+<main>
+    <div class="container atten_form">
+        <div style="text-align: center; margin-bottom: 2em;">
+            <i class="fa-solid fa-check-circle" style="font-size: 3em; color: #51cf66; margin-bottom: 0.5em;"></i>
+            <h2 style="color: #51cf66; margin: 0.5em 0;">Attendance Submitted Successfully!</h2>
+            <p style="color: #a6e3a1; font-size: 1.1em;">Your attendance has been recorded</p>
+        </div>
+
+        <div style="background: rgba(0, 0, 0, 0.253); border-radius: 10px; padding: 2em; margin: 1.5em 0; color: white;">
+            <h3 style="margin-top: 0; color: #51cf66; border-bottom: 2px solid #51cf66; padding-bottom: 0.5em;">Attendance Details</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-top: 1.5em;">
+                <div>
+                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">CLASS</p>
+                    <p style="font-size: 1.2em; font-weight: bold;">{{ submission.class_id }}</p>
+                </div>
+                
+                <div>
+                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">TEACHER</p>
+                    <p style="font-size: 1.2em; font-weight: bold;">{{ submission.teacher_name }}</p>
+                </div>
+                
+                <div>
+                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">CLASS TIME</p>
+                    <p style="font-size: 1.1em;">{{ submission.start_time }} to {{ submission.end_time }}</p>
+                </div>
+                
+                <div>
+                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">SUBMITTED AT</p>
+                    <p style="font-size: 1.1em;">{{ submission.timestamp }}</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5em; border-top: 1px solid #444; padding-top: 1.5em;">
+                <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">YOUR ATTENDANCE STATUS</p>
+                {% if submission.attendance == 'present' %}
+                    <p style="font-size: 1.3em; font-weight: bold; color: #51cf66;">
+                        <i class="fa-solid fa-check" style="margin-right: 0.5em;"></i>PRESENT
+                    </p>
+                {% else %}
+                    <p style="font-size: 1.3em; font-weight: bold; color: #ff8787;">
+                        <i class="fa-solid fa-times" style="margin-right: 0.5em;"></i>ABSENT
+                    </p>
+                {% endif %}
+            </div>
+
+            {% if submission.notes %}
+                <div style="margin-top: 1.5em; border-top: 1px solid #444; padding-top: 1.5em;">
+                    <p style="color: #888; font-size: 0.9em; margin-bottom: 0.3em;">YOUR NOTES</p>
+                    <p style="font-size: 1em; color: #ddd; background: rgba(0, 0, 0, 0.3); padding: 0.8em; border-radius: 5px; border-left: 3px solid #51cf66;">{{ submission.notes }}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center; margin-top: 2em; margin-bottom: 20px;">
+            <a href="{{ url_for('home') }}" style="display: inline-block; padding: 0.8em 2em; background-color: #4a5568; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background-color 0.3s;">
+                <i class="fa-solid fa-arrow-left" style="margin-right: 0.5em;"></i>Back to home
+            </a>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

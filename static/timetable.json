@@ -89,5 +89,16 @@
     "teacher_name": "Bob Tutor",
     "start_time": "2026-05-12 19:30:00",
     "end_time": "2026-05-12 20:00:00"
+},
+
+{
+    "id": 10,
+    "class_id": "C101",
+    "class_name": "Maths",
+    "students": ["student1"],
+    "teacher_id": "teacher2",
+    "teacher_name": "Bob Tutor",
+    "start_time": "2026-05-14 19:20:00",
+    "end_time": "2026-05-14 20:00:00"
 }
 ]

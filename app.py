@@ -300,7 +300,33 @@ def student_dashboard():
         conn.commit()
         conn.close()
 
-        return redirect(url_for('student_dashboard'))
+        # Load timetable to get class details for summary
+        all_timetables = load_timetable()
+        class_details = {}
+        for timetable in all_timetables:
+            if str(timetable['id']) == str(timetable_id):
+                class_details = {
+                    'class_id': timetable['class_id'],
+                    'class_name': timetable.get('class_name', ''),
+                    'teacher_name': timetable.get('teacher_name', ''),
+                    'start_time': timetable['start_time'],
+                    'end_time': timetable['end_time']
+                }
+                break
+
+        # Store submission details in session for summary
+        session['submission'] = {
+            'class_id': class_details.get('class_id', ''),
+            'class_name': class_details.get('class_name', ''),
+            'teacher_name': class_details.get('teacher_name', ''),
+            'start_time': class_details.get('start_time', ''),
+            'end_time': class_details.get('end_time', ''),
+            'attendance': attendance,
+            'notes': notes,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return redirect(url_for('attendance_summary'))
 
     # Load timetable from JSON file
     all_timetables = load_timetable()
@@ -347,6 +373,23 @@ def student_dashboard():
         active_classes=active_classes,
         no_active_classes=no_active_classes,
         current_time=current_time.strftime('%Y-%m-%d %H:%M:%S')
+    )
+
+@app.route('/student/attendance_summary')
+def attendance_summary():
+    """Attendance summary page showing the submitted attendance."""
+    if 'student_id' not in session:
+        return redirect(url_for('student'))
+    
+    submission = session.pop('submission', None)
+    
+    if not submission:
+        return redirect(url_for('student_dashboard'))
+    
+    return render_template(
+        'attendance_summary.html',
+        name=session.get('student_name', 'Student'),
+        submission=submission
     )
 
 @app.route('/admin', methods=['GET', 'POST'])

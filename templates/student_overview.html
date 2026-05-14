@@ -33,17 +33,15 @@
                                 <td>{{ record.class_name }}</td>
                                 <td>{{ record.teacher_name }}</td>
                                 <td>
-                                    <span style="padding: 0.25em 0.5em; border-radius: 3px; font-weight: bold;">
                                     {% if record.status == 'present' %}
-                                        background-color: #4caf50; color: white;
+                                        <span style="padding: 0.25em 0.5em; border-radius: 3px; font-weight: bold; background-color: #4caf50; color: white;">{{ record.status | upper }}</span>
                                     {% elif record.status == 'absent' %}
-                                        background-color: #f44336; color: white;
+                                        <span style="padding: 0.25em 0.5em; border-radius: 3px; font-weight: bold; background-color: #f44336; color: white;">{{ record.status | upper }}</span>
                                     {% elif record.status == 'late' %}
-                                        background-color: #ff9800; color: white;
+                                        <span style="padding: 0.25em 0.5em; border-radius: 3px; font-weight: bold; background-color: #ff9800; color: white;">{{ record.status | upper }}</span>
                                     {% else %}
-                                        background-color: #9e9e9e; color: white;
+                                        <span style="padding: 0.25em 0.5em; border-radius: 3px; font-weight: bold; background-color: #9e9e9e; color: white;">{{ record.status | upper }}</span>
                                     {% endif %}
-                                    ">{{ record.status | upper }}</span>
                                 </td>
                                 <td>{{ record.notes if record.notes else '-' }}</td>
                                 <td>{{ record.timestamp }}</td>
