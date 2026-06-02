@@ -3,11 +3,32 @@
 
 <main>
     <div class="container">
-        <div class="summary-card">
+        <div class="summary-card fade-in-up">
             <h2>Admin Dashboard</h2>
-            <p>All attendance submissions are listed below.</p>
+            <p>Review attendance records and export submissions for reporting.</p>
+            <div class="summary-row">
+                <div>
+                    <span>Total records</span>
+                    <strong>{{ attendance_total }}</strong>
+                </div>
+                <div>
+                    <span>Students</span>
+                    <strong>{{ student_total }}</strong>
+                </div>
+                <div>
+                    <span>Teachers</span>
+                    <strong>{{ tutor_total }}</strong>
+                </div>
+            </div>
+            <div class="summary-actions" style="margin-top: 1.5rem; gap: 14px;">
+                <a href="{{ url_for('admin_export_attendance') }}" class="button_design">Export CSV</a>
+                <a href="{{ url_for('admin_menu') }}" class="secondary-btn button_design">Admin Menu</a>
+                <a href="{{ url_for('logout') }}" class="secondary-btn button_design">Logout</a>
+            </div>
+        </div>
 
-            {% if records %}
+        {% if records %}
+            <div class="summary-card fade-in-up">
                 <div class="table-wrap">
                     <table class="records-table">
                         <thead>
@@ -29,22 +50,19 @@
                                 <td>{{ record.class_name }}</td>
                                 <td>{{ 'Yes' if record.class_running == 1 else 'No' }}</td>
                                 <td>{{ record.student_count }}</td>
-                                <td>{{ record.notes }}</td>
+                                <td>{{ record.notes or '-' }}</td>
                                 <td>{{ record.timestamp }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% else %}
-                <p>No attendance records found yet.</p>
-            {% endif %}
-
-            <div class="summary-actions">
-                <a href="{{ url_for('admin_menu') }}" class="secondary-btn button_design">Back to Admin Menu</a>
-                <a href="{{ url_for('logout') }}" class="secondary-btn button_design">Logout</a>
             </div>
-        </div>
+        {% else %}
+            <div class="summary-card fade-in-up">
+                <p>No attendance records found yet.</p>
+            </div>
+        {% endif %}
     </div>
 </main>
 

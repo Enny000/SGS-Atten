@@ -24,30 +24,47 @@
 
         <a href="{{ url_for('student') }}">
             <div class="btn_Role">
-                <i class="fa-solid fa-user-tie" style="color: rgb(255, 255, 255);"></i>
+                <i class="fa-solid fa-user-graduate"></i>
                 <h3> Student</h3>
             </div>
         </a>
 
         <a href="{{ url_for('teacher') }}">
             <div class="btn_Role">
-                <i class="fa-solid fa-user-tie" style="color: rgb(255, 255, 255);"></i>
+                <i class="fa-solid fa-chalkboard-user"></i>
                 <h3> Teacher</h3>
             </div>
         </a>
         
 
-        <a href="{{ url_for('admin_menu') }}">
+        <a href="{{ url_for('admin') }}">
             <div class="btn_Role">
-                <i class="fa-solid fa-head-side-virus" style="color: rgb(255, 255, 255);"></i>            
+                <i class="fa-solid fa-user-shield"></i>
                 <h3>Admin</h3>
             </div>
         </a>
         
     </div>
 
-    <div class="contact">
-
-    </div>
+    <section class="feature-section">
+        <div class="feature-header">
+            <h2>Features at a glance</h2>
+            <p>Quickly see what students, teachers, and admins can do in the portal.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card fade-in-up">
+                <h3>Real-time attendance</h3>
+                <p>See active classes and confirm attendance only while your scheduled session is running.</p>
+            </article>
+            <article class="feature-card fade-in-up">
+                <h3>Teacher analytics</h3>
+                <p>Teachers can submit attendance, review recent records, and track average attendance counts.</p>
+            </article>
+            <article class="feature-card fade-in-up">
+                <h3>Admin reporting</h3>
+                <p>Admins can review attendance history and export records to CSV for reporting.</p>
+            </article>
+        </div>
+    </section>
 </main>
 {% endblock %}

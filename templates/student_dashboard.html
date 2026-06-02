@@ -1,76 +1,135 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class="back">
     <a href="{{ url_for('logout') }}">
-        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255); overflow: hidden;"></i>
+        <i class="fa-solid fa-arrow-left"></i>
         <h2>Logout</h2>
     </a>
 </div>
 
 <main>
-    <div class="container atten_form">
-
-        <h2>Welcome, {{ name }}!</h2>
-
-        {% if not active_classes %}
-            <p style="color: #ff6b6b; font-size: 1.1em;">You are not enrolled in any classes.</p>
-        {% elif no_active_classes %}
-            <p style="color: #ffa500; font-size: 1.1em;">No active classes at this time. Current time: {{ current_time }}</p>
-            <p>Your scheduled classes:</p>
-            <div style="margin-top: 1em;">
-                {% for class in active_classes %}
-                    <div style="padding: 1em; margin: 0.5em 0; border-radius: 5px; background-color: #1b1f3a;">
-                        <strong>Class:</strong> {{ class.class_id }}<br>
-                        <strong>Teacher:</strong> {{ class.teacher_name }}<br>
-                        <strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}
+    <div class="container">
+        <div class="dashboard-grid">
+            <section class="summary-card fade-in-up">
+                <h2>Welcome, {{ name }}!</h2>
+                <p>Confirm your attendance, check your upcoming classes, and review your recent history.</p>
+                <div class="summary-row">
+                    <div>
+                        <span>Active classes</span>
+                        <strong>{{ active_classes | length }}</strong>
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p>Confirm your attendance for active classes below:</p>
-            {% for class in active_classes %}
-                {% if class.is_active %}
-                    <div style="padding: 1em; margin: 1em 0; border-radius: 10px; background:rgba(0, 0, 0, 0.253); color: white; padding: 20px;">
-                        <div class="info_border" style="padding: 12px; border-radius: 10px;">
-                            <h3 style="margin-top: 0;">Class: {{ class.class_id }}</h3>
-                            <p><strong>Teacher:</strong> {{ class.teacher_name }}</p>
-                            <p><strong>Time:</strong> {{ class.start_time }} to {{ class.end_time }}</p>
-                            <p style="font-weight: bold;">✓ CLASS IS ACTIVE - Mark your attendance now!</p>
-                        </div>
+                    <div>
+                        <span>Total submissions</span>
+                        <strong>{{ attendance_total }}</strong>
+                    </div>
+                    <div>
+                        <span>Present</span>
+                        <strong>{{ attendance_counts.present }}</strong>
+                    </div>
+                </div>
+            </section>
 
-                        <form method="post" class="form_info" style="margin-top: 1em;">
-                            <input type="hidden" name="timetable_id" value="{{ class.timetable_id }}">
+            <section class="summary-card fade-in-up">
+                <h3>Next class</h3>
+                {% if next_class %}
+                    <p><strong>{{ next_class.class_id }} - {{ next_class.class_name }}</strong></p>
+                    <p>{{ next_class.start_time }} to {{ next_class.end_time }}</p>
+                {% else %}
+                    <p>No upcoming class found. Check your timetable again later.</p>
+                {% endif %}
+                <div class="summary-actions" style="margin-top: 1rem; justify-content: space-between;">
+                    <small>Current time: {{ current_time }}</small>
+                    <a href="{{ url_for('student_dashboard') }}" class="secondary-btn button_design">Refresh</a>
+                </div>
+            </section>
+        </div>
 
+        {% if active_classes %}
+            <section class="summary-card fade-in-up">
+                <h3>Active Class(es)</h3>
+                <p>Confirm attendance for the active session below.</p>
+                {% for class in active_classes %}
+                    <div class="attendance-card">
+                        <div class="attendance-card-header">
                             <div>
-                                <h4 style="margin-bottom: 10px;">Are you attending this class?</h4>
+                                <h4>{{ class.class_id }} - {{ class.class_name or 'Class' }}</h4>
+                                <p>{{ class.start_time }} to {{ class.end_time }}</p>
+                                <p>Teacher: {{ class.teacher_name }}</p>
+                            </div>
+                            <span class="status-badge status-active">Active now</span>
+                        </div>
+                        <form method="post" class="form_info">
+                            <input type="hidden" name="timetable_id" value="{{ class.id }}">
+                            <div>
+                                <label>Attendance</label>
                                 <div class="btn">
                                     <div>
-                                        <input type="radio" name="attendance" value="present" id="present_{{ class.timetable_id }}" required>
-                                        <label for="present_{{ class.timetable_id }}">Yes, I'm present</label>
+                                        <input type="radio" name="attendance" value="present" id="present_{{ class.id }}" required>
+                                        <label for="present_{{ class.id }}">Present</label>
                                     </div>
                                     <div>
-                                        <input type="radio" name="attendance" value="absent" id="absent_{{ class.timetable_id }}" required>
-                                        <label for="absent_{{ class.timetable_id }}">No, I'm absent</label>
+                                        <input type="radio" name="attendance" value="absent" id="absent_{{ class.id }}" required>
+                                        <label for="absent_{{ class.id }}">Absent</label>
                                     </div>
                                 </div>
                             </div>
-
                             <div>
-                                <label for="notes_{{ class.timetable_id }}">Optional Notes:</label>
-                                <textarea name="notes" id="notes_{{ class.timetable_id }}" placeholder="Add any notes..." rows="3"></textarea>
+                                <label for="notes_{{ class.id }}">Optional notes</label>
+                                <textarea name="notes" id="notes_{{ class.id }}" placeholder="Add any notes..." rows="3"></textarea>
                             </div>
-
-                            <div>
-                                <button type="submit" class="button_design">Submit Attendance</button>
-                            </div>
+                            <button type="submit" class="button_design">Submit Attendance</button>
                         </form>
                     </div>
+                {% endfor %}
+            </section>
+        {% else %}
+            <section class="summary-card fade-in-up">
+                <h3>No active classes found</h3>
+                <p>You are not currently in any active session.</p>
+                {% if student_classes %}
+                    <p>Your scheduled classes:</p>
+                    <ul class="schedule-list">
+                        {% for class in student_classes %}
+                            <li>
+                                <strong>{{ class.class_id }}</strong> — {{ class.class_name or 'Scheduled class' }}<br>
+                                {{ class.start_time }} to {{ class.end_time }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>There are no classes assigned to your account yet.</p>
                 {% endif %}
-            {% endfor %}
+            </section>
         {% endif %}
 
+        {% if recent_records %}
+            <section class="summary-card fade-in-up">
+                <h3>Recent attendance activity</h3>
+                <div class="table-wrap">
+                    <table class="records-table">
+                        <thead>
+                            <tr>
+                                <th>Class ID</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                                <th>Submitted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in recent_records %}
+                                <tr>
+                                    <td>{{ record.timetable_id }}</td>
+                                    <td>{{ record.status | upper }}</td>
+                                    <td>{{ record.notes or '-' }}</td>
+                                    <td>{{ record.timestamp }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

@@ -3,34 +3,40 @@
 
 <main>
     <div class="container">
-        <div class="summary-card">
-            <h2>Attendance submitted</h2>
-            <p>Review your submission below before continuing.</p>
+        <div class="summary-card fade-in-up">
+            <h2>Attendance Submitted</h2>
+            <p>Your submission has been saved successfully.</p>
 
-            <div class="summary-row">
-                <span>Teacher</span>
-                <strong>{{ name }}</strong>
+            <div class="summary-row" style="margin-top: 1rem;">
+                <div>
+                    <span>Teacher</span>
+                    <strong>{{ name }}</strong>
+                </div>
+                <div>
+                    <span>Class name</span>
+                    <strong>{{ record['class_name'] }}</strong>
+                </div>
             </div>
-            <div class="summary-row">
-                <span>Class name</span>
-                <strong>{{ record['class_name'] }}</strong>
+
+            <div class="summary-row" style="margin-top: 1rem;">
+                <div>
+                    <span>Class running</span>
+                    <strong>{{ 'Yes' if record['class_running'] == 1 else 'No' }}</strong>
+                </div>
+                <div>
+                    <span>Students present</span>
+                    <strong>{{ record['student_count'] }}</strong>
+                </div>
             </div>
-            <div class="summary-row">
-                <span>Class running</span>
-                <strong>{{ 'Yes' if record['class_running'] == 1 else 'No' }}</strong>
-            </div>
-            <div class="summary-row">
-                <span>Students present</span>
-                <strong>{{ record['student_count'] }}</strong>
-            </div>
-            <div class="summary-row summary-notes">
+
+            <div class="summary-card" style="margin-top: 1.5rem; padding: 18px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12);">
                 <span>Notes</span>
-                <p>{{ record['notes'] or 'None' }}</p>
+                <p style="margin-top: 10px; color: #ddd;">{{ record['notes'] or 'None' }}</p>
             </div>
 
-            <div class="summary-actions a-center flex">
+            <div class="summary-actions a-center flex" style="margin-top: 2rem; gap: 12px;">
                 <a href="{{ url_for('teacher_dashboard') }}" class="secondary-btn button_design">Submit another attendance</a>
-                <a href="{{ url_for('logout') }}" class="submit-btn button_design j-center">Logout</a>
+                <a href="{{ url_for('logout') }}" class="button_design">Logout</a>
             </div>
         </div>
     </div>

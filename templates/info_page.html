@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .info-section {
+        scroll-margin-top: 120px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 2em;
+        padding: 2em 0;
+    }
+
+    .section-title h1 {
+        color: white;
+        font-size: 2.5em;
+        margin: 0 0 0.5em 0;
+        border-bottom: 3px solid #51cf66;
+        padding-bottom: 0.5em;
+        display: inline-block;
+    }
+
+    .info-content {
+        background: rgba(0, 0, 0, 0.253);
+        border-radius: 10px;
+        padding: 2em;
+        margin: 1.5em 0;
+        color: white;
+    }
+
+    .info-content h2 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1em;
+        font-size: 1.5em;
+    }
+
+    .info-content h3 {
+        color: #a6e3a1;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .info-content p {
+        line-height: 1.6;
+        color: #ddd;
+        margin: 0.8em 0;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5em;
+        margin: 1.5em 0;
+    }
+
+    .contact-item {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1.5em;
+        border-radius: 8px;
+    }
+
+    .contact-item i {
+        color: #51cf66;
+        font-size: 1.5em;
+        margin-right: 0.5em;
+    }
+
+    .contact-item h4 {
+        color: #a6e3a1;
+        margin: 0.5em 0;
+    }
+
+    .contact-item p {
+        margin: 0.5em 0;
+        font-size: 0.95em;
+    }
+
+    .help-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+        margin: 1.5em 0;
+    }
+
+    .help-item {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1.5em;
+        border-radius: 8px;
+    }
+
+    .help-item h4 {
+        color: #51cf66;
+        margin-top: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .help-item i {
+        margin-right: 0.8em;
+        color: #51cf66;
+    }
+
+    .help-item p {
+        margin-top: 0.8em;
+    }
+
+    .back-to-top {
+        text-align: center;
+        margin: 2em 0;
+    }
+
+    .back-to-top a {
+        display: inline-block;
+        padding: 0.8em 2em;
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s;
+        border: 2px solid #51cf66;
+    }
+
+    .back-to-top a:hover {
+        background: rgba(81, 207, 102, 0.1);
+        border: 2px solid #51cf66;
+        color: #51cf66;
+    }
+
+    @media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-title h1 {
+            font-size: 1.8em;
+        }
+    }
+</style>
+
+<main>
+    <div class="container">
+        <div class="back-to-top" style="margin-bottom: 2em;">
+            <a href="{{ url_for('home') }}">
+                <i class="fa-solid fa-arrow-left" style="margin-right: 0.5em;"></i>Back to Home
+            </a>
+        </div>
+
+        <!-- ABOUT SECTION -->
+        <div class="info-section" id="about">
+            <div class="section-title">
+                <h1><i class="fa-solid fa-circle-info" style="margin-right: 0.5em;"></i>About</h1>
+            </div>
+
+            <div class="info-content">
+                <h2>About SGS Attendance Portal</h2>
+                <p>
+                    The SGS Attendance Portal is a modern, user-friendly system designed to streamline attendance tracking 
+                    for South Gloucestershire Stroud College. This platform was created as part of a work placement project 
+                    to improve the efficiency and accuracy of attendance management.
+                </p>
+
+                <h3>Our Mission</h3>
+                <p>
+                    We aim to provide a seamless experience for students, teachers, and administrators by offering a centralized 
+                    platform for attendance tracking, reporting, and analysis.
+                </p>
+
+                <h3>Key Features</h3>
+                <p>
+                    <strong><i class="fa-solid fa-check" style="color: #51cf66;"></i> Easy Check-In:</strong> 
+                    Students can quickly submit their attendance status through an intuitive interface.<br>
+                    <strong><i class="fa-solid fa-check" style="color: #51cf66;"></i> Real-Time Reports:</strong> 
+                    Teachers and admins can view attendance reports instantly.<br>
+                    <strong><i class="fa-solid fa-check" style="color: #51cf66;"></i> Secure Access:</strong> 
+                    Role-based authentication ensures data security and privacy.<br>
+                    <strong><i class="fa-solid fa-check" style="color: #51cf66;"></i> Detailed Analytics:</strong> 
+                    Track attendance patterns and generate comprehensive reports.
+                </p>
+
+                <h3>Why Choose Us?</h3>
+                <p>
+                    Built with cutting-edge technology and student feedback, our portal simplifies attendance management 
+                    while maintaining the highest standards of security and accuracy.
+                </p>
+            </div>
+        </div>
+
+        <!-- CONTACT SECTION -->
+        <div class="info-section" id="contact">
+            <div class="section-title">
+                <h1><i class="fa-solid fa-envelope" style="margin-right: 0.5em;"></i>Contact</h1>
+            </div>
+
+            <div class="info-content">
+                <h2>Get in Touch</h2>
+                <p>
+                    Have questions or need support? We're here to help! Reach out to us through any of the channels below.
+                </p>
+
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <h4>
+                            <i class="fa-solid fa-envelope"></i>Email
+                        </h4>
+                        <p>support@sgsattendance.edu</p>
+                        <p style="font-size: 0.85em; color: #888;">Response time: 24-48 hours</p>
+                    </div>
+
+                    <div class="contact-item">
+                        <h4>
+                            <i class="fa-solid fa-phone"></i>Phone
+                        </h4>
+                        <p>+44 (0) 1453 899 000</p>
+                        <p style="font-size: 0.85em; color: #888;">Mon-Fri: 9am - 5pm</p>
+                    </div>
+
+                    <div class="contact-item">
+                        <h4>
+                            <i class="fa-solid fa-location-dot"></i>Location
+                        </h4>
+                        <p>South Gloucestershire Stroud College</p>
+                        <p style="font-size: 0.85em; color: #888;">Gloucestershire, UK</p>
+                    </div>
+
+                    <div class="contact-item">
+                        <h4>
+                            <i class="fa-solid fa-clock"></i>Support Hours
+                        </h4>
+                        <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                        <p style="font-size: 0.85em; color: #888;">Closed on weekends and holidays</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(81, 207, 102, 0.1); border-left: 3px solid #51cf66; padding: 1.5em; border-radius: 5px; margin-top: 1.5em;">
+                    <h3 style="margin-top: 0;">Quick Support</h3>
+                    <p>For urgent issues, please contact the IT support team at your campus office or send an email to support@sgsattendance.edu with a detailed description of your issue.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HELP SECTION -->
+        <div class="info-section" id="help">
+            <div class="section-title">
+                <h1><i class="fa-solid fa-circle-question" style="margin-right: 0.5em;"></i>Help</h1>
+            </div>
+
+            <div class="info-content">
+                <h2>Frequently Asked Questions</h2>
+                <p>
+                    Find answers to common questions about the SGS Attendance Portal below. 
+                    If you don't find what you're looking for, feel free to contact us.
+                </p>
+
+                <div class="help-grid">
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>How do I submit my attendance?</h4>
+                        <p>
+                            Log in with your student credentials, select your class from the dashboard, 
+                            and click the "Submit Attendance" button. Confirm your status (Present/Absent) 
+                            and add any notes if necessary.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>What should I do if I forgot my password?</h4>
+                        <p>
+                            Click on the "Forgot Password?" link on the login page and follow the instructions. 
+                            An email with password reset instructions will be sent to your registered email address 
+                            within a few minutes.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>Can I change my submitted attendance?</h4>
+                        <p>
+                            Once submitted, attendance records cannot be modified directly through the portal. 
+                            Contact your teacher or the support team if you need to correct an entry.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>How can teachers view attendance reports?</h4>
+                        <p>
+                            Teachers can access the attendance summary from their dashboard. 
+                            Select a class and date range to view detailed attendance records and generate reports.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>What does the attendance status mean?</h4>
+                        <p>
+                            <strong>Present:</strong> You attended the class. 
+                            <strong>Absent:</strong> You were not present for the class. 
+                            These statuses are recorded with the exact timestamp of submission.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>Is my data secure?</h4>
+                        <p>
+                            Yes! The SGS Attendance Portal uses industry-standard encryption and security protocols 
+                            to protect your personal data. Your attendance records are confidential and accessible only to authorized users.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>Can I add notes with my attendance submission?</h4>
+                        <p>
+                            Yes, you can add optional notes when submitting your attendance. 
+                            This is useful for explaining absences or providing additional context about your attendance status.
+                        </p>
+                    </div>
+
+                    <div class="help-item">
+                        <h4><i class="fa-solid fa-question"></i>What if I encounter a technical issue?</h4>
+                        <p>
+                            If you experience technical problems, try refreshing your browser or clearing your cache. 
+                            If the issue persists, contact the support team with details about the problem and any error messages.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(81, 207, 102, 0.1); border-left: 3px solid #51cf66; padding: 1.5em; border-radius: 5px; margin-top: 2em;">
+                    <h3 style="margin-top: 0;">Still Need Help?</h3>
+                    <p>
+                        If your question isn't answered here, don't hesitate to reach out to us via email at 
+                        <strong>support@sgsattendance.edu</strong> or call us during business hours. 
+                        Our support team is always ready to assist you!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

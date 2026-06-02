@@ -1,69 +1,112 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class="back">
     <a href="{{ url_for('logout') }}">
-        <i class="fa-solid fa-arrow-left" style="color: rgb(255, 255, 255); overflow: hidden;"></i>
+        <i class="fa-solid fa-arrow-left"></i>
         <h2>Logout</h2>
     </a>
 </div>
 
 <main>
-    <div class="container atten_form">
-
-        <h2>Welcome, {{ name }}!</h2>
-        <p>Submit attendance for your class below.</p>
-
-        {% if success %}
-            <div class="success-message">{{ success }}</div>
-        {% endif %}
-
-        <form method="post" class="form_info">
-            <div>
-                <label for="class_name">Class Name:</label>
-                <select name="class_name" id="class_name" required>
-                    <option value="">Select class</option>
-                    <option value="2003">2003</option>
-                    <option value="2074">2074</option>
-                    <option value="2752">2752</option>
-                    <option value="2932">2932</option>
-                </select>
-            </div>
-
-            <div>
-                <h3>Is the class running?</h3>
-                <br>
-                <div class="btn">                    
+    <div class="container">
+        <div class="dashboard-grid">
+            <section class="summary-card fade-in-up">
+                <h2>Welcome, {{ name }}!</h2>
+                <p>Submit attendance and review your recent activity.</p>
+                <div class="summary-row">
                     <div>
-                        <input type="radio" name="class_running" value="yes" id="yes" required>
-                        <label for="yes">Yes</label>
+                        <span>Total submissions</span>
+                        <strong>{{ stats.total_submissions }}</strong>
                     </div>
                     <div>
-                        <input type="radio" name="class_running" value="no" id="no" required>
-                        <label for="no">No</label>
+                        <span>Average present</span>
+                        <strong>{{ stats.average_present }}</strong>
                     </div>
                 </div>
+                <div class="summary-actions" style="margin-top: 1rem; gap: 16px;">
+                    <a href="{{ url_for('teacher_dashboard') }}" class="button_design">Refresh</a>
+                </div>
+            </section>
 
+            <section class="atten_form fade-in-up">
+                <h2>Submit Attendance</h2>
+                <form method="post" class="form_info">
+                    <div>
+                        <label for="class_name">Class Name</label>
+                        <select name="class_name" id="class_name" required>
+                            <option value="">Select class</option>
+                            {% for option in class_options %}
+                                <option value="{{ option.class_id }}">{{ option.class_id }} - {{ option.class_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Is the class running?</label>
+                        <div class="btn">
+                            <div>
+                                <input type="radio" name="class_running" value="yes" id="yes" required>
+                                <label for="yes">Yes</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="class_running" value="no" id="no" required>
+                                <label for="no">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="student_count">Number of students present</label>
+                        <input type="number" name="student_count" id="student_count" min="0" value="0" required>
+                    </div>
+
+                    <div>
+                        <label for="notes">Optional Notes</label>
+                        <textarea name="notes" id="notes" placeholder="Type here ..." rows="4"></textarea>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="button_design">Submit Attendance</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        {% if stats.recent_records %}
+            <div class="summary-card fade-in-up" style="margin-top: 30px;">
+                <h3>Recent Attendance Submissions</h3>
+                <div class="table-wrap">
+                    <table class="records-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Class</th>
+                                <th>Running</th>
+                                <th>Students</th>
+                                <th>Notes</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in stats.recent_records %}
+                                <tr>
+                                    <td>{{ record.id }}</td>
+                                    <td>{{ record.class_name }}</td>
+                                    <td>{{ 'Yes' if record.class_running == 1 else 'No' }}</td>
+                                    <td>{{ record.student_count }}</td>
+                                    <td>{{ record.notes or '-' }}</td>
+                                    <td>{{ record.timestamp }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <div>
-                <label for="student_count">Number of students present:</label>
-                <input type="number" name="student_count" id="student_count" min="0" value="0" required>
-            </div>
-
-            <div>
-                <label for="notes">Optional Notes</label>
-                <textarea name="notes" id="notes" placeholder="Type here ..." rows="4"></textarea>
-            </div>
-
-            <div >
-                <button type="submit" class="button_design">Submit Attendance</button>
-            </div>
-        </form>
-
+        {% endif %}
     </div>
 </main>
+
 <script>
     const noRadio = document.getElementById('no');
     if (noRadio) {
@@ -74,4 +117,5 @@
             }
         });
     }
-</script>{% endblock %}
+</script>
+{% endblock %}

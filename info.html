@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="nav-spacer"></div>
+
+<main>
+    <div class="container center ">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SGS Logo Smaller">
+
+        <h2>Welcome to <br> SGS Attendance Portal</h2>
+
+        <div class="next">
+            <a href="#role">
+                <i class=" down-arrow fa-solid fa-angles-down bounce-top" style="color: rgb(255, 255, 255);"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="role" id="role">
+        <h1>SGS Attendance Portal</h1>
+        <h2>Select your role:</h2>
+
+        <a href="{{ url_for('student') }}">
+            <div class="btn_Role">
+                <i class="fa-solid fa-user-tie" style="color: rgb(255, 255, 255);"></i>
+                <h3> Student</h3>
+            </div>
+        </a>
+
+        <a href="{{ url_for('teacher') }}">
+            <div class="btn_Role">
+                <i class="fa-solid fa-user-tie" style="color: rgb(255, 255, 255);"></i>
+                <h3> Teacher</h3>
+            </div>
+        </a>
+        
+
+        <a href="{{ url_for('admin_menu') }}">
+            <div class="btn_Role">
+                <i class="fa-solid fa-head-side-virus" style="color: rgb(255, 255, 255);"></i>            
+                <h3>Admin</h3>
+            </div>
+        </a>
+        
+    </div>
+
+    <div class="contact">
+
+    </div>
+</main>
+{% endblock %}

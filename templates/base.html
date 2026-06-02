@@ -27,19 +27,19 @@
                     </li>
 
                     <li>
-                        <a href="">
+                        <a href="{{ url_for('info_page') }}#contact">
                             Contact
                         </a>
                     </li>
 
                     <li>
-                        <a href="">
+                        <a href="{{ url_for('info_page') }}#about">
                             About
                         </a>
                     </li>
 
                     <li>
-                        <a href="">
+                        <a href="{{ url_for('info_page') }}#help">
                             Help    
                         </a>
                     </li>
@@ -51,6 +51,18 @@
             
         </div>
     </header>
+
+    <div class="container flash-block">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
 
     {% block content %}{% endblock %}
 
